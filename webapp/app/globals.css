@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --graditi-red: #B71C1C;
+  --graditi-red-dark: #7f0000;
+  --graditi-gray: #5a5a5a;
+  --graditi-black: #1a1a1a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Mejorar visibilidad de inputs y selects */
+input[type="text"],
+input[type="url"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+textarea,
+select {
+  @apply text-gray-900 bg-white border-gray-400;
+}
+
+input::placeholder,
+textarea::placeholder {
+  @apply text-gray-500;
+}
+
+select option {
+  @apply text-gray-900 bg-white;
+}
+
+/* Mejorar visibilidad de placeholders e inputs */
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+  font-weight: 400 !important;
+}
+
+input,
+textarea,
+select {
+  color: #111827 !important;
+  font-weight: 500 !important;
+}
+
+select option {
+  color: #111827 !important;
+  background-color: white !important;
+  font-weight: 500 !important;
+  padding: 8px !important;
+}
+
+select option:checked {
+  background-color: #fee2e2 !important;
+  color: #991b1b !important;
+}
+
+/* Estilos personalizados de Graditi */
+.graditi-gradient {
+  background: linear-gradient(135deg, var(--graditi-red) 0%, var(--graditi-red-dark) 100%);
+}
+
+.graditi-text-gradient {
+  background: linear-gradient(135deg, var(--graditi-red) 0%, var(--graditi-red-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
