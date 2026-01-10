@@ -4,20 +4,20 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // Herramientas/Inventario
-    match /tools/{toolId} {
+    match /herramientas/{toolId} {
       allow read: if true; // Cualquiera puede ver el inventario
       allow create, update, delete: if request.auth != null; // Solo usuarios autenticados pueden modificar
     }
     
     // Movimientos
-    match /movements/{movementId} {
+    match /movimientos/{movementId} {
       allow read: if true; // Cualquiera puede ver movimientos
       allow create: if request.auth != null; // Solo usuarios autenticados pueden crear
       allow update, delete: if false; // No se pueden modificar movimientos (registro inmutable)
     }
     
     // Mantenimiento
-    match /maintenance/{maintenanceId} {
+    match /mantenimientos/{maintenanceId} {
       allow read: if true;
       allow create, update: if request.auth != null;
       allow delete: if false; // No borrar historial de mantenimiento
