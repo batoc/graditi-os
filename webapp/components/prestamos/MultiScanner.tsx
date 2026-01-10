@@ -17,22 +17,16 @@ export default function MultiScanner({ onHerramientasChange, herramientas }: Mul
   const scannerRef = useRef<Html5Qrcode | null>(null);
 
   useEffect(() => {
-    let unmounted = false;
+    let scanner: Html5Qrcode | null = null;
 
     if (scanning) {
       const startScanner = async () => {
         try {
-            // Slight delay to ensure DOM element exists
-            await new Promise(r => setTimeout(r, 100));
-            if (unmounted) return;
+            await new Promise(r => setTimeout(r, 50));
+            
+            if (!document.getElementById('multi-reader')) return;
 
-            // Check if element exists before creating instance
-            if (!document.getElementById('multi-reader')) {
-                console.error("Reader element not found");
-                return;
-            }
-
-            const scanner = new Html5Qrcode("multi-reader");
+            scanner = new Html5Qrcode("multi-reader");
             scannerRef.current = scanner;
             
             await scanner.start(
@@ -49,36 +43,18 @@ export default function MultiScanner({ onHerramientasChange, herramientas }: Mul
                 }
             );
         } catch (err) {
-            console.error("Error starting scanner", err);
+            console.warn("Error starting scanner", err);
             setScanning(false);
         }
       };
       startScanner();
-    } else {
-        // Stop logic
-        if (scannerRef.current) {
-             scannerRef.current.stop().then(() => {
-                 scannerRef.current?.clear();
-                 scannerRef.current = null;
-             }).catch(err => {
-                 console.error("Failed to stop scanner", err);
-                 scannerRef.current = null;
-             });
-        }
     }
 
     return () => {
-        unmounted = true;
-        if (scannerRef.current) {
-            if (scannerRef.current.isScanning) {
-                 scannerRef.current.stop().then(() => {
-                    scannerRef.current?.clear();
-                    scannerRef.current = null;
-                }).catch(console.error);
-            } else {
-                 scannerRef.current.clear();
-                 scannerRef.current = null;
-            }
+        if (scanner && scanner.isScanning) {
+             scanner.stop()
+                .then(() => scanner?.clear())
+                .catch(err => console.warn("Scanner stop error", err));
         }
     };
   }, [scanning]);

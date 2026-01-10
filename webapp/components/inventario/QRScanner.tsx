@@ -20,16 +20,22 @@ export default function QRScanner() {
 
   // Start Scanner
   useEffect(() => {
-    // Only attempt to start if scanning=true and we don't have a running scanner
-    if (scanning && !scannerRef.current) {
+    let scanner: Html5Qrcode | null = null;
+
+    if (scanning) {
       const startScanner = async () => {
         try {
-          // Use a small timeout to ensure the "reader" div is mounted
-          await new Promise(r => setTimeout(r, 100));
-
-          const scanner = new Html5Qrcode("reader");
-          scannerRef.current = scanner;
+          // Wait for the DOM element to be ready
+          await new Promise(r => setTimeout(r, 50));
           
+          if (!document.getElementById("reader")) {
+            console.warn("Scanner element not found, retrying...");
+            return;
+          }
+
+          scanner = new Html5Qrcode("reader");
+          scannerRef.current = scanner;
+
           await scanner.start(
             { facingMode: "environment" },
             {
@@ -44,8 +50,7 @@ export default function QRScanner() {
             }
           );
         } catch (err) {
-          console.error("Error starting scanner:", err);
-          setError("No se pudo iniciar la cámara. Verifica los permisos o intenta desde otro dispositivo.");
+          console.warn("Error starting scanner or aborted:", err);
           setScanning(false);
         }
       };
@@ -53,39 +58,28 @@ export default function QRScanner() {
       startScanner();
     }
 
-    // Cleanup: stop scanner if scanning becomes false
-    if (!scanning && scannerRef.current) {
-        scannerRef.current.stop().then(() => {
-            scannerRef.current?.clear();
-            scannerRef.current = null;
-        }).catch(err => {
-            console.error("Error stopping scanner", err);
-            scannerRef.current = null;
-        });
-    }
-
     return () => {
-        // Unmount cleanup
-        if (scannerRef.current) {
-             scannerRef.current.stop().then(() => {
-                scannerRef.current?.clear();
-                scannerRef.current = null;
-            }).catch(console.error);
-        }
+      if (scanner && scanner.isScanning) {
+        scanner.stop()
+          .then(() => scanner?.clear())
+          .catch(err => console.warn("Error cleaning up scanner:", err));
+      }
     };
   }, [scanning]);
 
   const handleScan = async (code: string) => {
     if (code && !tool) {
-      // Stop scanner immediately on success
-      if (scannerRef.current) {
-          await scannerRef.current.stop();
-          scannerRef.current.clear();
-          scannerRef.current = null;
+      // Pause scanner instead of full stop to prevent transition errors during state update
+      if (scannerRef.current?.isScanning) {
+        try {
+           await scannerRef.current.pause();
+        } catch (e) { 
+           console.warn("Error pausing scanner", e); 
+        }
       }
       
       setResultCode(code);
-      setScanning(false);
+      setScanning(false); // This will trigger the cleanup effect which stops and clears
       fetchTool(code);
     }
   };
