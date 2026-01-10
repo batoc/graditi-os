@@ -82,6 +82,7 @@ export interface Obra {
   id: string;
   nombre: string;
   codigo: string;
+  cliente?: string;
   ubicacion: string;
   estado: 'activa' | 'pausada' | 'finalizada';
   fechaInicio: number;
@@ -94,6 +95,7 @@ export interface Obra {
 export interface ObraFormData {
   nombre: string;
   codigo: string;
+  cliente?: string;
   ubicacion: string;
   estado: 'activa' | 'pausada' | 'finalizada';
   fechaInicio: string;

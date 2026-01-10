@@ -15,7 +15,7 @@ export default function NuevaObraPage() {
     ubicacion: '',
     cliente: '',
     fechaInicio: new Date().toISOString().split('T')[0],
-    fechaFinEstimada: '',
+    fechaFin: '',
     descripcion: '',
     estado: 'activa'
   });
@@ -121,15 +121,15 @@ export default function NuevaObraPage() {
               />
             </div>
 
-            {/* Fecha Fin Estimada */}
+            {/* Fecha Fin */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Fecha Fin Estimada
               </label>
               <input
                 type="date"
-                value={formData.fechaFinEstimada || ''}
-                onChange={(e) => setFormData({ ...formData, fechaFinEstimada: e.target.value })}
+                value={formData.fechaFin}
+                onChange={(e) => setFormData({ ...formData, fechaFin: e.target.value })}
                 className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600"
               />
             </div>

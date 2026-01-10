@@ -17,7 +17,7 @@ export default function EditarObraPage() {
     ubicacion: '',
     cliente: '',
     fechaInicio: '',
-    fechaFinEstimada: '',
+    fechaFin: '',
     descripcion: '',
     estado: 'activa'
   });
@@ -36,9 +36,11 @@ export default function EditarObraPage() {
           codigo: obra.codigo,
           nombre: obra.nombre,
           ubicacion: obra.ubicacion,
-          cliente: obra.cliente,
-          fechaInicio: obra.fechaInicio,
-          fechaFinEstimada: obra.fechaFinEstimada || '',
+          cliente: obra.cliente || '',
+          fechaInicio: new Date(obra.fechaInicio).toISOString().split('T')[0],
+          fechaFin: obra.fechaFin 
+            ? new Date(obra.fechaFin).toISOString().split('T')[0] 
+            : '',
           descripcion: obra.descripcion || '',
           estado: obra.estado
         });
@@ -183,15 +185,15 @@ export default function EditarObraPage() {
               />
             </div>
 
-            {/* Fecha Fin Estimada */}
+            {/* Fecha Fin */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Fecha Fin Estimada
               </label>
               <input
                 type="date"
-                value={formData.fechaFinEstimada || ''}
-                onChange={(e) => setFormData({ ...formData, fechaFinEstimada: e.target.value })}
+                value={formData.fechaFin}
+                onChange={(e) => setFormData({ ...formData, fechaFin: e.target.value })}
                 className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600"
               />
             </div>

@@ -20,6 +20,7 @@ export const addObra = async (data: ObraFormData): Promise<string> => {
     const docRef = await addDoc(collection(db, COLLECTION_NAME), {
       nombre: data.nombre,
       codigo: data.codigo,
+      cliente: data.cliente || '',
       ubicacion: data.ubicacion,
       estado: data.estado,
       fechaInicio: new Date(data.fechaInicio).getTime(),
@@ -89,6 +90,7 @@ export const updateObra = async (id: string, data: Partial<ObraFormData>): Promi
     
     if (data.nombre) updateData.nombre = data.nombre;
     if (data.codigo) updateData.codigo = data.codigo;
+    if (data.cliente) updateData.cliente = data.cliente;
     if (data.ubicacion) updateData.ubicacion = data.ubicacion;
     if (data.estado) updateData.estado = data.estado;
     if (data.descripcion !== undefined) updateData.descripcion = data.descripcion;
