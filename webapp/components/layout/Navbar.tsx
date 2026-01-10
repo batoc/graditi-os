@@ -1,12 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/useAuth';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useAuth();
 
   const isActive = (path: string) => pathname.startsWith(path);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/login');
+  };
+
+  // Don't show navbar on login page
+  if (pathname === '/login') return null;
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
@@ -54,9 +67,19 @@ export default function Navbar() {
             <button className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100">
               <BellIcon />
             </button>
-            <div className="w-9 h-9 bg-red-800 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-              AD
-            </div>
+            {user && (
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 bg-red-800 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  {user.email?.charAt(0).toUpperCase()}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="text-sm text-gray-600 hover:text-gray-900 font-medium px-3 py-1 rounded-lg hover:bg-gray-100"
+                >
+                  Salir
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
