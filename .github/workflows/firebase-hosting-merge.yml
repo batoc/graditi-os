@@ -17,3 +17,5 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GRADITI_GROUP }}
           channelId: live
           projectId: graditi-group
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
