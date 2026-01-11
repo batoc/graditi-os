@@ -84,6 +84,8 @@ export interface Obra {
   codigo: string;
   cliente?: string;
   ubicacion: string;
+  latitud?: number;
+  longitud?: number;
   estado: 'activa' | 'pausada' | 'finalizada';
   fechaInicio: number;
   fechaFin?: number;
@@ -97,6 +99,8 @@ export interface ObraFormData {
   codigo: string;
   cliente?: string;
   ubicacion: string;
+  latitud?: string;
+  longitud?: string;
   estado: 'activa' | 'pausada' | 'finalizada';
   fechaInicio: string;
   fechaFin?: string;

@@ -22,6 +22,8 @@ export const addObra = async (data: ObraFormData): Promise<string> => {
       codigo: data.codigo,
       cliente: data.cliente || '',
       ubicacion: data.ubicacion,
+      latitud: data.latitud ? parseFloat(data.latitud) : null,
+      longitud: data.longitud ? parseFloat(data.longitud) : null,
       estado: data.estado,
       fechaInicio: new Date(data.fechaInicio).getTime(),
       fechaFin: data.fechaFin ? new Date(data.fechaFin).getTime() : null,
@@ -92,6 +94,8 @@ export const updateObra = async (id: string, data: Partial<ObraFormData>): Promi
     if (data.codigo) updateData.codigo = data.codigo;
     if (data.cliente) updateData.cliente = data.cliente;
     if (data.ubicacion) updateData.ubicacion = data.ubicacion;
+    if (data.latitud) updateData.latitud = parseFloat(data.latitud);
+    if (data.longitud) updateData.longitud = parseFloat(data.longitud);
     if (data.estado) updateData.estado = data.estado;
     if (data.descripcion !== undefined) updateData.descripcion = data.descripcion;
     

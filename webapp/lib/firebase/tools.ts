@@ -113,9 +113,19 @@ export const addMovement = async (movement: Movement) => {
       timestamp: Date.now()
     });
 
-    // 2. Update tool status
+    // 2. Update tool status and location
     const newStatus: ToolStatus = movement.type === 'salida' ? 'en_uso' : 'disponible';
-    await updateToolStatus(movement.toolId, newStatus);
+    
+    // If it's a 'salida', location becomes destination. If 'entrada', location becomes 'Bodega' (default)
+    // Note: If entering from an Obra, user might want to set specific bodega location, defaulting to 'Bodega' for now.
+    const newLocation = movement.type === 'salida' ? movement.destination : 'Bodega';
+    
+    const toolRef = doc(db, COLLECTION_NAME, movement.toolId);
+    await updateDoc(toolRef, {
+        estado: newStatus,
+        ubicacion: newLocation,
+        updatedAt: Date.now()
+    });
     
     return true;
   } catch (error) {

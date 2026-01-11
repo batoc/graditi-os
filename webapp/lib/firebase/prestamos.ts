@@ -161,6 +161,34 @@ export const devolverHerramientas = async (
 
 // ==================== CONSULTAS ====================
 
+export const getPrestamos = async (): Promise<Prestamo[]> => {
+  try {
+    const q = query(
+      collection(db, COLLECTION_NAME),
+      orderBy('fechaSalida', 'desc')
+    );
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Prestamo));
+  } catch (error) {
+    console.error('Error getting all prestamos:', error);
+    // If orderBy fails due to index, fall back to client-side sorting
+    try {
+      const querySnapshot = await getDocs(collection(db, COLLECTION_NAME));
+      const prestamos = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as Prestamo));
+      return prestamos.sort((a, b) => b.fechaSalida - a.fechaSalida);
+    } catch (fallbackError) {
+      console.error('Error in fallback query:', fallbackError);
+      return [];
+    }
+  }
+};
+
 export const getPrestamosActivos = async (): Promise<Prestamo[]> => {
   try {
     const q = query(

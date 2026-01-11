@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import { addObra } from '@/lib/firebase/obras';
+import { getNextCode } from '@/lib/firebase/sequences';
 import { ObraFormData } from '@/types/inventory';
 
 export default function NuevaObraPage() {
@@ -19,6 +20,18 @@ export default function NuevaObraPage() {
     descripcion: '',
     estado: 'activa'
   });
+
+  useEffect(() => {
+    const fetchCode = async () => {
+      try {
+        const nextCode = await getNextCode('OBR', 'obras');
+        setFormData(prev => ({ ...prev, codigo: nextCode }));
+      } catch (error) {
+        console.error("Failed to generate code", error);
+      }
+    };
+    fetchCode();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,14 +65,26 @@ export default function NuevaObraPage() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Código *
               </label>
-              <input
-                type="text"
-                required
-                value={formData.codigo}
-                onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
-                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600"
-                placeholder="OBR-001"
-              />
+              <div className="relative">
+                <input
+                    type="text"
+                    required
+                    value={formData.codigo}
+                    onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 bg-gray-50"
+                    placeholder="Generando..."
+                />
+                 <button 
+                    type="button" 
+                    onClick={async () => {
+                        const code = await getNextCode('OBR', 'obras');
+                        setFormData({...formData, codigo: code});
+                    }}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-blue-600 hover:text-blue-800"
+                >
+                    Regenerar
+                </button>
+              </div>
             </div>
 
             {/* Nombre */}
@@ -95,7 +120,7 @@ export default function NuevaObraPage() {
             {/* Ubicación */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Ubicación *
+                Dirección / Ubicación *
               </label>
               <input
                 type="text"
@@ -103,8 +128,43 @@ export default function NuevaObraPage() {
                 value={formData.ubicacion}
                 onChange={(e) => setFormData({ ...formData, ubicacion: e.target.value })}
                 className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600"
-                placeholder="Cra 7 # 26-85, Bogotá"
+                placeholder="Calle 123 # 45-67"
               />
+            </div>
+            
+            {/* Coordenadas */}
+            <div className="col-span-full bg-blue-50 p-4 rounded-lg border border-blue-100">
+                <h3 className="text-sm font-semibold text-blue-900 mb-3">Geolocalización (Mapa)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-600 mb-1">Latitud</label>
+                        <input
+                            type="number"
+                            step="any"
+                            value={formData.latitud || ''}
+                            onChange={(e) => setFormData({ ...formData, latitud: e.target.value })}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500"
+                            placeholder="Ej: 4.60971"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-600 mb-1">Longitud</label>
+                        <input
+                            type="number"
+                            step="any"
+                            value={formData.longitud || ''}
+                            onChange={(e) => setFormData({ ...formData, longitud: e.target.value })}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500"
+                            placeholder="Ej: -74.08175"
+                        />
+                    </div>
+                    <div className="col-span-full">
+                        <p className="text-xs text-blue-700">
+                           Tip: Puedes copiar las coordenadas desde Google Maps (clic derecho en el mapa &gt; copiar coordenadas) y pegarlas aquí.
+                           Si pegas "4.60, -74.08" en el campo de latitud, intentaré separarlas automáticamente.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             {/* Fecha Inicio */}

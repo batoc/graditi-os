@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import { getMaterialById, getMaterialMovements, registrarMovimientoMaterial } from '@/lib/firebase/materials';
 import { getObrasActivas } from '@/lib/firebase/obras'; 
@@ -11,7 +12,6 @@ import { useAuth } from '@/lib/useAuth';
 export default function DetalleMaterialPage() {
   const { id } = useParams() as { id: string };
   const { user } = useAuth();
-  const router = useRouter();
 
   const [material, setMaterial] = useState<Material | null>(null);
   const [movements, setMovements] = useState<MovimientoMaterial[]>([]);
@@ -169,14 +169,12 @@ export default function DetalleMaterialPage() {
                         </button>
                     </div>
                 </div>
-            </div>
             
             {material.descripcion && (
                 <div className="mt-4 pt-4 border-t border-gray-100">
                     <p className="text-gray-600 text-sm">{material.descripcion}</p>
                 </div>
             )}
-         </div>
 
          {/* History */}
          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -189,6 +187,8 @@ export default function DetalleMaterialPage() {
                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cantidad</th>
+                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Costo</th>
+                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prov/Destino</th>
                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Detalles</th>
                      </tr>
                  </thead>
@@ -208,26 +208,30 @@ export default function DetalleMaterialPage() {
                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                  {mov.cantidad}
                              </td>
+                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                 {mov.costoTotal ? `$${Number(mov.costoTotal).toLocaleString()}` : '-'}
+                             </td>
+                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                 {mov.tipo === 'entrada' ? (
+                                    <span className="font-medium text-gray-900">{mov.proveedor || '-'}</span>
+                                 ) : (
+                                    <span className="text-blue-600">{mov.obraNombre ? `Obra: ${mov.obraNombre}` : '-'}</span>
+                                 )}
+                             </td>
                              <td className="px-6 py-4 text-sm text-gray-500">
-                                 {mov.obraNombre && (
+                                 {mov.factura && (
                                      <div className="mb-1">
-                                        <span className="text-xs text-gray-400 uppercase">Destino:</span> 
-                                        <span className="font-medium text-blue-600 ml-1">{mov.obraNombre}</span>
+                                        <span className="text-xs text-gray-400 uppercase">Factura:</span> 
+                                        <span className="font-medium text-gray-700 ml-1">{mov.factura}</span>
                                      </div>
                                  )}
-                                 {mov.proveedor && (
-                                     <div className="mb-1">
-                                         <span className="text-xs text-gray-400 uppercase">Prov:</span> 
-                                         <span className="font-medium text-gray-700 ml-1">{mov.proveedor}</span>
-                                     </div>
-                                 )}
-                                 {mov.observaciones && <div className="text-gray-600 italic">"{mov.observaciones}"</div>}
+                                 {mov.observaciones && <div className="text-gray-600 italic">&quot;{mov.observaciones}&quot;</div>}
                              </td>
                          </tr>
                      ))}
                      {movements.length === 0 && (
                          <tr>
-                             <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                             <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                                  No hay movimientos registrados.
                              </td>
                          </tr>

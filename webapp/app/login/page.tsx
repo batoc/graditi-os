@@ -36,6 +36,15 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-gray-100">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-200">
         <div className="text-center mb-8">
+          {/* Logo */}
+          <div className="flex justify-center mb-4">
+            <img 
+              src="https://graditi.com.co/wp-content/uploads/2023/10/Recurso-26.png" 
+              alt="Graditi Group" 
+              className="h-16 w-auto object-contain"
+            />
+          </div>
+          
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {isSignUp ? 'Crear Cuenta' : 'Iniciar Sesión'}
           </h1>

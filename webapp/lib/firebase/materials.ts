@@ -166,17 +166,21 @@ const addMaterialMovement = async (movimiento: MovimientoMaterial) => {
 
 export const getMaterialMovements = async (materialId: string): Promise<MovimientoMaterial[]> => {
     try {
+        // En desarrollo, usamos ordenamiento del lado del cliente para evitar errores de índice faltante en Firestore
+        // Cuando el índice esté listo, podemos volver a usar orderBy('fecha', 'desc') en la query
         const q = query(
             collection(db, MOVEMENTS_COLLECTION), 
-            where('materialId', '==', materialId),
-            orderBy('fecha', 'desc'),
-            limit(50)
+            where('materialId', '==', materialId)
         );
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => ({
+        
+        const movements = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         } as MovimientoMaterial));
+
+        // Ordenar por fecha descendente (más reciente primero)
+        return movements.sort((a, b) => b.fecha - a.fecha).slice(0, 50);
     } catch(error) {
         console.error("Error getting movements:", error);
         return [];

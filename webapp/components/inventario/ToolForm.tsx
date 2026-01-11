@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ToolFormData, ToolStatus } from '@/types/inventory';
 import { addTool } from '@/lib/firebase/tools';
+import { getNextCode } from '@/lib/firebase/sequences';
 
 export default function ToolForm() {
   const router = useRouter();
@@ -20,6 +21,21 @@ export default function ToolForm() {
     imagenUrl: '',
     nextMaintenanceDate: '',
   });
+
+  useEffect(() => {
+    // Only generate if empty (new form)
+    if (!formData.codigo) {
+        const fetchCode = async () => {
+            try {
+                const nextCode = await getNextCode('HER', 'herramientas');
+                setFormData(prev => ({ ...prev, codigo: nextCode }));
+            } catch (error) {
+                console.error("Failed to generate code", error);
+            }
+        };
+        fetchCode();
+    }
+  }, []);
 
   const handleImageUrlChange = (url: string) => {
     setFormData({ ...formData, imagenUrl: url });
@@ -100,14 +116,26 @@ export default function ToolForm() {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Código <span className="text-red-500">*</span>
           </label>
-          <input
-            required
-            type="text"
-            value={formData.codigo}
-            onChange={(e) => setFormData({ ...formData, codigo: e.target.value.toUpperCase() })}
-            className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 font-mono placeholder:text-gray-400 text-gray-900 bg-white font-semibold"
-            placeholder="Ej: TDR-001"
-          />
+          <div className="relative">
+            <input
+                required
+                type="text"
+                value={formData.codigo}
+                onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 placeholder:text-gray-400 text-gray-900 bg-gray-50 font-medium"
+                placeholder="Generando..."
+            />
+             <button 
+                type="button" 
+                onClick={async () => {
+                    const code = await getNextCode('HER', 'herramientas');
+                    setFormData({...formData, codigo: code});
+                }}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-blue-600 hover:text-blue-800"
+            >
+                Regenerar
+            </button>
+          </div>
         </div>
 
         {/* Categoría */}

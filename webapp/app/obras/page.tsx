@@ -2,9 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic'; // Import dynamic
 import Navbar from '@/components/layout/Navbar';
 import { getObras } from '@/lib/firebase/obras';
 import { Obra } from '@/types/inventory';
+
+// Dynamically import the map to avoid SSR issues with Leaflet
+const ProjectsMap = dynamic(() => import('@/components/obras/ProjectsMap'), {
+  ssr: false,
+  loading: () => <div className="h-64 animate-pulse bg-gray-200 rounded-xl w-full"></div>
+});
 
 export default function ObrasPage() {
   const [obras, setObras] = useState<Obra[]>([]);
@@ -76,6 +83,17 @@ export default function ObrasPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full max-w-md px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600"
           />
+        </div>
+
+        {/* MAPA */}
+        <div className="mb-10">
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 7m0 13V7m0 0L9.553 4.553A1 1 0 009 7" />
+                </svg>
+                Mapa de Obras Activas
+            </h2>
+            <ProjectsMap obras={obras} />
         </div>
 
         {/* Lista */}
