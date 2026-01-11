@@ -252,6 +252,14 @@ export default function DetalleMaterialPage() {
                                  <input 
                                      type="number" 
                                      required 
+                                     step="any"
+                                     value={qty}
+                                     onChange={(e) => setQty(e.target.value)}
+                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                     autoFocus
+                                 />
+                             </div>
+
                              {modalType === 'entrada' && (
                                 <>
                                     <div>
@@ -294,15 +302,6 @@ export default function DetalleMaterialPage() {
                                     </div>
                                 </>
                              )}
-
-                             {modalType === 'salida' && (
-                                     step="any"
-                                     value={qty}
-                                     onChange={(e) => setQty(e.target.value)}
-                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                                     autoFocus
-                                 />
-                             </div>
 
                              {modalType === 'salida' && (
                                  <div>
