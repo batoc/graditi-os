@@ -60,7 +60,7 @@ export default function ObraDetailPage() {
 
   const prestamosActivos = prestamos.filter(p => p.estado === 'activo');
   const herramientasActivas = prestamosActivos.reduce((total, p) => 
-    total + p.herramientas.filter(h => h.estado === 'en_uso').length, 0
+    total + p.herramientas.filter(h => !h.devuelto).length, 0
   );
 
   const getEstadoBadge = (estado: string) => {
