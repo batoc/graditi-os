@@ -24,20 +24,24 @@ export const addMaterial = async (data: MaterialFormData, userId: string): Promi
     const initialQty = Number(data.cantidadInicial || 0);
 
     // 1. Crear el documento del material
-    const materialData: Omit<Material, 'id'> = {
+    // Nota: Firestore no acepta valores 'undefined', por lo que construimos el objeto paso a paso o usamos null
+    const materialData: Record<string, any> = {
       nombre: data.nombre,
       codigo: data.codigo,
       categoria: data.categoria,
       unidad: data.unidad,
-      cantidadDisponible: initialQty, // Establecer stock inicial
+      cantidadDisponible: initialQty,
       cantidadMinima: Number(data.cantidadMinima || 0),
       descripcion: data.descripcion || '',
       ubicacion: data.ubicacion || '',
-      precioUnitario: data.precioUnitario ? Number(data.precioUnitario) : undefined,
       createdAt: Date.now(),
     };
 
-    const docRef = await addDoc(collection(db, MATERIALS_COLLECTION), materialData);
+    if (data.precioUnitario) {
+      materialData.precioUnitario = Number(data.precioUnitario);
+    }
+
+    const docRef = await addDoc(collection(db, MATERIALS_COLLECTION), materialData as Omit<Material, 'id'>);
 
     // 2. Si hay stock inicial, crear un movimiento de entrada "Inicial"
     if (initialQty > 0) {
