@@ -139,11 +139,11 @@ export default function ObraDetailPage() {
                   </p>
                 </div>
                 
-                {obra.fechaFinEstimada && (
+                {obra.fechaFin && (
                   <div>
                     <label className="text-sm text-gray-500">Fecha Fin Estimada</label>
                     <p className="font-semibold text-gray-900">
-                      {new Date(obra.fechaFinEstimada).toLocaleDateString('es-CO')}
+                      {new Date(obra.fechaFin).toLocaleDateString('es-CO')}
                     </p>
                   </div>
                 )}
@@ -218,21 +218,21 @@ export default function ObraDetailPage() {
                       
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-sm font-semibold text-gray-700 mb-2">
-                          Herramientas ({prestamo.herramientas.filter(h => h.estado === 'en_uso').length})
+                          Herramientas ({prestamo.herramientas.filter(h => !h.devuelto).length})
                         </p>
                         <div className="space-y-1">
                           {prestamo.herramientas
-                            .filter(h => h.estado === 'en_uso')
+                            .filter(h => !h.devuelto)
                             .slice(0, 3)
                             .map((h, idx) => (
                               <div key={idx} className="text-sm text-gray-600 flex items-center gap-2">
                                 <span className="w-2 h-2 bg-red-600 rounded-full"></span>
-                                {h.nombre} ({h.codigo})
+                                {h.toolNombre} ({h.toolCode})
                               </div>
                             ))}
-                          {prestamo.herramientas.filter(h => h.estado === 'en_uso').length > 3 && (
+                          {prestamo.herramientas.filter(h => !h.devuelto).length > 3 && (
                             <p className="text-sm text-gray-500 italic">
-                              +{prestamo.herramientas.filter(h => h.estado === 'en_uso').length - 3} más
+                              +{prestamo.herramientas.filter(h => !h.devuelto).length - 3} más
                             </p>
                           )}
                         </div>
@@ -244,12 +244,12 @@ export default function ObraDetailPage() {
             </div>
 
             {/* Historial */}
-            {prestamos.filter(p => p.estado === 'finalizado').length > 0 && (
+            {prestamos.filter(p => p.estado === 'devuelto').length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">
                 <h2 className="text-xl font-bold mb-4 text-gray-900">Historial de Préstamos</h2>
                 <div className="space-y-3">
                   {prestamos
-                    .filter(p => p.estado === 'finalizado')
+                    .filter(p => p.estado === 'devuelto')
                     .slice(0, 5)
                     .map((prestamo) => (
                       <div

@@ -197,7 +197,7 @@ export default function DashboardPage() {
                         {mov.type}
                       </span>
                     </td>
-                    <td className="px-6 py-3 font-medium text-gray-900">{mov.toolName || mov.toolCode}</td>
+                    <td className="px-6 py-3 font-medium text-gray-900">{mov.toolCode}</td>
                     <td className="px-6 py-3">{mov.responsible}</td>
                     <td className="px-6 py-3 text-gray-500">{new Date(mov.timestamp).toLocaleDateString()}</td>
                   </tr>

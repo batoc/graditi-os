@@ -10,14 +10,14 @@ import { ToolFormData, ColaboradorFormData, ObraFormData, PrestamoHerramienta } 
 import { useRouter } from 'next/navigation';
 
 const SAMPLE_TOOLS: ToolFormData[] = [
-  { nombre: "Taladro Percutor DeWalt", codigo: "TAL-001", categoria: "Eléctrica", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Taladro percutor de 1/2 pulgada", imageUrl: "https://m.media-amazon.com/images/I/61+R+T5+1UL._AC_SL1500_.jpg", fechaCompra: "2023-01-01", valorCompra: 450000, proveedor: "Homecenter" },
-  { nombre: "Pulidora Makita 4-1/2", codigo: "PUL-001", categoria: "Eléctrica", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Pulidora angular", imageUrl: "https://m.media-amazon.com/images/I/71R2o5-k+dL._AC_SL1500_.jpg", fechaCompra: "2023-02-15", valorCompra: 320000, proveedor: "Easy" },
-  { nombre: "Martillo Demoledor Bosch", codigo: "DEM-001", categoria: "Pesada", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Martillo rompepavimento", imageUrl: "https://m.media-amazon.com/images/I/61N+x+a+1UL._AC_SL1000_.jpg", fechaCompra: "2022-11-20", valorCompra: 1200000, proveedor: "Ferreteria Industrial" },
-  { nombre: "Sierra Circular", codigo: "SIE-001", categoria: "Corte", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Sierra circular 7-1/4", imageUrl: "https://m.media-amazon.com/images/I/71X+x+a+1UL._AC_SL1500_.jpg", fechaCompra: "2023-03-10", valorCompra: 550000, proveedor: "Homecenter" },
-  { nombre: "Nivel Laser", codigo: "NIV-001", categoria: "Medición", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Nivel laser 3 lineas", imageUrl: "https://m.media-amazon.com/images/I/61Z+x+a+1UL._AC_SL1200_.jpg", fechaCompra: "2023-04-05", valorCompra: 380000, proveedor: "Amazon" },
-  { nombre: "Planta Eléctrica", codigo: "GEN-001", categoria: "Generación", estado: "mantenimiento", ubicacion: "Taller", descripcion: "En reparación por falla de encendido", imageUrl: "https://m.media-amazon.com/images/I/71Y+x+a+1UL._AC_SL1500_.jpg", fechaCompra: "2021-06-15", valorCompra: 2500000, proveedor: "Enermax" },
-  { nombre: "Taladro Inalámbrico", codigo: "TAL-002", categoria: "Eléctrica", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Taladro 20V Max", imageUrl: "https://m.media-amazon.com/images/I/61+R+T5+1UL._AC_SL1500_.jpg", fechaCompra: "2023-05-20", valorCompra: 650000, proveedor: "Homecenter" },
-  { nombre: "Esmeril de Banco", codigo: "ESM-001", categoria: "Taller", estado: "disponible", ubicacion: "Taller", descripcion: "Esmeril de 6 pulgadas", imageUrl: "https://m.media-amazon.com/images/I/71R2o5-k+dL._AC_SL1500_.jpg", fechaCompra: "2023-01-10", valorCompra: 420000, proveedor: "Ferreteria Industrial" },
+  { nombre: "Taladro Percutor DeWalt", codigo: "TAL-001", categoria: "Eléctrica", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Taladro percutor de 1/2 pulgada", imagenUrl: "https://m.media-amazon.com/images/I/61+R+T5+1UL._AC_SL1500_.jpg" },
+  { nombre: "Pulidora Makita 4-1/2", codigo: "PUL-001", categoria: "Eléctrica", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Pulidora angular", imagenUrl: "https://m.media-amazon.com/images/I/71R2o5-k+dL._AC_SL1500_.jpg" },
+  { nombre: "Martillo Demoledor Bosch", codigo: "DEM-001", categoria: "Pesada", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Martillo rompepavimento", imagenUrl: "https://m.media-amazon.com/images/I/61N+x+a+1UL._AC_SL1000_.jpg" },
+  { nombre: "Sierra Circular", codigo: "SIE-001", categoria: "Corte", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Sierra circular 7-1/4", imagenUrl: "https://m.media-amazon.com/images/I/71X+x+a+1UL._AC_SL1500_.jpg" },
+  { nombre: "Nivel Laser", codigo: "NIV-001", categoria: "Medición", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Nivel laser 3 lineas", imagenUrl: "https://m.media-amazon.com/images/I/61Z+x+a+1UL._AC_SL1200_.jpg" },
+  { nombre: "Planta Eléctrica", codigo: "GEN-001", categoria: "Generación", estado: "mantenimiento", ubicacion: "Taller", descripcion: "En reparación por falla de encendido", imagenUrl: "https://m.media-amazon.com/images/I/71Y+x+a+1UL._AC_SL1500_.jpg" },
+  { nombre: "Taladro Inalámbrico", codigo: "TAL-002", categoria: "Eléctrica", estado: "disponible", ubicacion: "Bodega Central", descripcion: "Taladro 20V Max", imagenUrl: "https://m.media-amazon.com/images/I/61+R+T5+1UL._AC_SL1500_.jpg" },
+  { nombre: "Esmeril de Banco", codigo: "ESM-001", categoria: "Taller", estado: "disponible", ubicacion: "Taller", descripcion: "Esmeril de 6 pulgadas", imagenUrl: "https://m.media-amazon.com/images/I/71R2o5-k+dL._AC_SL1500_.jpg" },
 ];
 
 const SAMPLE_COLABORADORES: ColaboradorFormData[] = [
@@ -81,8 +81,8 @@ export default function SeedPage() {
         
         // Préstamo 1: Juan en Edificio Altos del Parque (2 herramientas)
         const loan1Tools: PrestamoHerramienta[] = [
-          { id: toolIds[0].id, nombre: toolIds[0].nombre, codigo: toolIds[0].codigo, estado: 'en_uso', observacionesSalida: 'Nueva' },
-          { id: toolIds[3].id, nombre: toolIds[3].nombre, codigo: toolIds[3].codigo, estado: 'en_uso', observacionesSalida: '' }
+          { toolId: toolIds[0].id, toolNombre: toolIds[0].nombre, toolCode: toolIds[0].codigo, devuelto: false },
+          { toolId: toolIds[3].id, toolNombre: toolIds[3].nombre, toolCode: toolIds[3].codigo, devuelto: false }
         ];
         
         await crearPrestamoSalida(
@@ -98,7 +98,7 @@ export default function SeedPage() {
 
         // Préstamo 2: Maria en CC Plaza (1 herramienta)
         const loan2Tools: PrestamoHerramienta[] = [
-          { id: toolIds[1].id, nombre: toolIds[1].nombre, codigo: toolIds[1].codigo, estado: 'en_uso', observacionesSalida: '' }
+          { toolId: toolIds[1].id, toolNombre: toolIds[1].nombre, toolCode: toolIds[1].codigo, devuelto: false }
         ];
         
         await crearPrestamoSalida(
