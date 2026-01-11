@@ -41,5 +41,19 @@ service cloud.firestore {
       allow create, update: if request.auth != null;
       allow delete: if false; // No borrar historial de préstamos
     }
+
+    // Materiales
+    match /materiales/{materialId} {
+      allow read: if true;
+      allow create, update: if request.auth != null;
+      allow delete: if false; // Preferir desactivar a borrar para mantener historia
+    }
+
+    // Movimientos de Materiales
+    match /movimientos_materiales/{movimientoId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if false; // Inmutable, como una transacción contable
+    }
   }
 }

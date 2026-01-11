@@ -131,3 +131,55 @@ export interface PrestamoHerramienta {
   estadoDevolucion?: 'bueno' | 'regular' | 'malo';
   observacionesDevolucion?: string;
 }
+
+// ==================== MATERIALES ====================
+
+export interface Material {
+  id: string;
+  nombre: string;
+  codigo: string;
+  categoria: string; // e.g., 'Consumible', 'Ferreteria', 'Electrico'
+  unidad: string; // e.g., 'kg', 'm', 'unidad', 'bulto', 'caja'
+  cantidadDisponible: number;
+  cantidadMinima: number; // Para alertas de stock bajo
+  ubicacion?: string; // Bodega
+  descripcion?: string;
+  precioUnitario?: number; // Opcional, para costos
+  createdAt: number;
+  updatedAt?: number;
+}
+
+export interface MaterialFormData {
+  nombre: string;
+  codigo: string;
+  categoria: string;
+  unidad: string;
+  cantidadMinima: string; // Form input string
+  ubicacion?: string;
+  descripcion?: string;
+  precioUnitario?: string;
+  cantidadInicial?: string; // Only for creation
+}
+
+export interface MovimientoMaterial {
+  id?: string;
+  materialId: string;
+  materialNombre: string;
+  tipo: 'entrada' | 'salida';
+  cantidad: number;
+  
+  // Contexto de salida
+  obraId?: string;
+  obraNombre?: string;
+  colaboradorId?: string; // Quien retira
+  colaboradorNombre?: string;
+  
+  // Contexto de entrada
+  proveedor?: string;
+  factura?: string;
+  costoTotal?: number;
+  
+  fecha: number;
+  usuarioId: string; // Quien registra en el sistema
+  observaciones?: string;
+}
