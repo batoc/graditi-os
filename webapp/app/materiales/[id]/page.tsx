@@ -179,6 +179,15 @@ export default function DetalleMaterialPage() {
          </div>
 
          {/* History */}
+         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+             <div className="px-6 py-4 border-b border-gray-200">
+                 <h3 className="text-lg font-medium text-gray-900">Historial de Movimientos</h3>
+             </div>
+             <table className="min-w-full divide-y divide-gray-200">
+                 <thead className="bg-gray-50">
+                     <tr>
+                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
+                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cantidad</th>
                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Detalles</th>
                      </tr>
@@ -213,15 +222,6 @@ export default function DetalleMaterialPage() {
                                      </div>
                                  )}
                                  {mov.observaciones && <div className="text-gray-600 italic">"{mov.observaciones}"</div>}
-                             </td>
-                         </tr>
-                     ))}     </td>
-                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                 {mov.cantidad}
-                             </td>
-                             <td className="px-6 py-4 text-sm text-gray-500">
-                                 {mov.obraNombre && <span className="font-medium text-blue-600 block">{mov.obraNombre}</span>}
-                                 {mov.observaciones || '-'}
                              </td>
                          </tr>
                      ))}
