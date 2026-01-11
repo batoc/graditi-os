@@ -19,7 +19,7 @@ const MOVEMENTS_COLLECTION = 'movimientos_materiales';
 
 // ==================== MATERIALES CRUD ====================
 
-export const addMaterial = async (data: MaterialFormData): Promise<string> => {
+export const addMaterial = async (data: MaterialFormData, userId: string): Promise<string> => {
   try {
     const initialQty = Number(data.cantidadInicial || 0);
 
@@ -48,7 +48,7 @@ export const addMaterial = async (data: MaterialFormData): Promise<string> => {
         cantidad: initialQty,
         observaciones: 'Inventario Inicial',
         fecha: Date.now(),
-        usuarioId: 'admin' // In a real app grab from context
+        usuarioId: userId
       });
     }
 

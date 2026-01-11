@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import { addMaterial } from '@/lib/firebase/materials';
 import { MaterialFormData } from '@/types/inventory';
+import { useAuth } from '@/lib/useAuth';
 
 export default function NuevoMaterialPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<MaterialFormData>({
     nombre: '',
@@ -23,14 +25,19 @@ export default function NuevoMaterialPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+        alert("Debes estar autenticado para crear materiales");
+        return;
+    }
+
     setLoading(true);
 
     try {
-      await addMaterial(formData);
+      await addMaterial(formData, user.uid);
       router.push('/materiales');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error);
-      alert('Error al crear el material');
+      alert('Error al crear el material: ' + (error.message || 'Desconocido'));
     } finally {
       setLoading(false);
     }
