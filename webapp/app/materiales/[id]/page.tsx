@@ -23,6 +23,12 @@ export default function DetalleMaterialPage() {
   const [modalType, setModalType] = useState<'entrada' | 'salida'>('salida');
   const [qty, setQty] = useState('');
   const [selectedObra, setSelectedObra] = useState('');
+  
+  // Extra fields for Entrada
+  const [proveedor, setProveedor] = useState('');
+  const [factura, setFactura] = useState('');
+  const [costoTotal, setCostoTotal] = useState('');
+
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -81,6 +87,11 @@ export default function DetalleMaterialPage() {
                 movimiento.obraId = selectedObra;
                 movimiento.obraNombre = obra?.nombre || 'Desconocida';
             }
+        } else {
+            // Entrada
+            if (proveedor) movimiento.proveedor = proveedor;
+            if (factura) movimiento.factura = factura;
+            if (costoTotal) movimiento.costoTotal = Number(costoTotal);
         }
 
         await registrarMovimientoMaterial(movimiento);
@@ -90,6 +101,10 @@ export default function DetalleMaterialPage() {
         setQty('');
         setNotes('');
         setSelectedObra('');
+        setProveedor('');
+        setFactura('');
+        setCostoTotal('');
+        
         await loadData(); // Reload to see new stock
     } catch(err: any) {
         console.error(err);
@@ -108,14 +123,23 @@ export default function DetalleMaterialPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
          {/* Breadcrumb */}
-         <div className="mb-6 flex items-center text-sm text-gray-500">
-             <Link href="/materiales" className="hover:text-blue-600">Materiales</Link>
-             <span className="mx-2">/</span>
-             <span className="font-medium text-gray-900">{material.nombre}</span>
-         </div>
-
-         {/* Header Card */}
-         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+                <div>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-2xl font-bold text-gray-900">{material.nombre}</h1>
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
+                            {material.codigo}
+                        </span>
+                        <Link 
+                          href={`/materiales/${material.id}/editar`}
+                          className="ml-2 text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                          </svg>
+                          Editar
+                        </Link>
+                    </div>
+                    <div className="flex gap-4 mt-2 text-sm text-gray-500">00 p-6 mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <div className="flex items-center gap-3">
@@ -164,17 +188,8 @@ export default function DetalleMaterialPage() {
          </div>
 
          {/* History */}
-         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-             <div className="px-6 py-4 border-b border-gray-200">
-                 <h3 className="text-lg font-medium text-gray-900">Historial de Movimientos</h3>
-             </div>
-             <table className="min-w-full divide-y divide-gray-200">
-                 <thead className="bg-gray-50">
-                     <tr>
-                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cantidad</th>
-                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Destino / Obs</th>
+                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Detalles</th>
                      </tr>
                  </thead>
                  <tbody className="divide-y divide-gray-200 bg-white">
@@ -190,6 +205,26 @@ export default function DetalleMaterialPage() {
                                      {mov.tipo.toUpperCase()}
                                  </span>
                              </td>
+                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                 {mov.cantidad}
+                             </td>
+                             <td className="px-6 py-4 text-sm text-gray-500">
+                                 {mov.obraNombre && (
+                                     <div className="mb-1">
+                                        <span className="text-xs text-gray-400 uppercase">Destino:</span> 
+                                        <span className="font-medium text-blue-600 ml-1">{mov.obraNombre}</span>
+                                     </div>
+                                 )}
+                                 {mov.proveedor && (
+                                     <div className="mb-1">
+                                         <span className="text-xs text-gray-400 uppercase">Prov:</span> 
+                                         <span className="font-medium text-gray-700 ml-1">{mov.proveedor}</span>
+                                     </div>
+                                 )}
+                                 {mov.observaciones && <div className="text-gray-600 italic">"{mov.observaciones}"</div>}
+                             </td>
+                         </tr>
+                     ))}     </td>
                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                  {mov.cantidad}
                              </td>
@@ -226,7 +261,50 @@ export default function DetalleMaterialPage() {
                                  <input 
                                      type="number" 
                                      required 
-                                     min="0.01"
+                             {modalType === 'entrada' && (
+                                <>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Proveedor
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            value={proveedor}
+                                            onChange={(e) => setProveedor(e.target.value)}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Nombre proveedor"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                Nro. Factura
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                value={factura}
+                                                onChange={(e) => setFactura(e.target.value)}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                Costo Total
+                                            </label>
+                                            <input 
+                                                type="number" 
+                                                min="0"
+                                                value={costoTotal}
+                                                onChange={(e) => setCostoTotal(e.target.value)}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="$"
+                                            />
+                                        </div>
+                                    </div>
+                                </>
+                             )}
+
+                             {modalType === 'salida' && (
                                      step="any"
                                      value={qty}
                                      onChange={(e) => setQty(e.target.value)}
