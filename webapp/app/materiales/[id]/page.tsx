@@ -139,15 +139,6 @@ export default function DetalleMaterialPage() {
                           Editar
                         </Link>
                     </div>
-                    <div className="flex gap-4 mt-2 text-sm text-gray-500">00 p-6 mb-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <div className="flex items-center gap-3">
-                        <h1 className="text-2xl font-bold text-gray-900">{material.nombre}</h1>
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
-                            {material.codigo}
-                        </span>
-                    </div>
                     <div className="flex gap-4 mt-2 text-sm text-gray-500">
                         <span>Cat: {material.categoria}</span>
                         <span>•</span>
